@@ -1,11 +1,21 @@
 using Blog2.DAL.Models;
 using Blog2.DAL;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using Blog2.BLL;
+using Blog2.DAL.Repositories.IRepositories;
+using Blog2.DAL.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+var mapperConfig = new MapperConfiguration((v) =>{
+    v.AddProfile(new MappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
 
 string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Blog2DbContext>(options => options.UseSqlServer(connection))
@@ -19,7 +29,11 @@ builder.Services.AddDbContext<Blog2DbContext>(options => options.UseSqlServer(co
     })
     .AddEntityFrameworkStores<Blog2DbContext>();
 
-
+builder.Services
+                .AddSingleton(mapper)
+                .AddTransient<ICommentRepository, CommentRepository>()
+                .AddTransient<ITagRepository, TagRepository>()
+                .AddTransient<IPostRepository, PostRepository>();
 
 
 
