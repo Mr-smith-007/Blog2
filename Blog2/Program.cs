@@ -1,15 +1,33 @@
+using Blog2.DAL.Models;
+using Blog2.DAL;
+using Microsoft.EntityFrameworkCore;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+
+string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<Blog2DbContext>(options => options.UseSqlServer(connection))
+    .AddIdentity<User, Role>(opts =>
+    {
+        opts.Password.RequiredLength = 6;
+        opts.Password.RequireNonAlphanumeric = false;
+        opts.Password.RequireLowercase = false;
+        opts.Password.RequireUppercase = false;
+        opts.Password.RequireDigit = false;
+    })
+    .AddEntityFrameworkStores<Blog2DbContext>();
+
+
+
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Home/Error");   
     app.UseHsts();
 }
 
