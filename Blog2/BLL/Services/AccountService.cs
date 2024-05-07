@@ -27,7 +27,7 @@ namespace Blog2.BLL.Services
             _postRepository = postRepository;
         }
 
-        public async Task<IdentityResult> Register(RegisterRequest model)
+        public async Task<IdentityResult> Register(UserRegisterViewModel model)
         {
             var user = _mapper.Map<User>(model);
 
@@ -50,7 +50,7 @@ namespace Blog2.BLL.Services
             }
         }
 
-        public async Task<SignInResult> Login(LoginRequest model)
+        public async Task<SignInResult> Login(UserLoginViewModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);

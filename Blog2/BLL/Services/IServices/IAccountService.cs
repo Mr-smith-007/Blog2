@@ -7,8 +7,8 @@ namespace Blog2.BLL.Services.IServices
 {
     public interface IAccountService
     {
-        Task<IdentityResult> Register(RegisterRequest model);
-        Task<SignInResult> Login(LoginRequest model);
+        Task<IdentityResult> Register(UserRegisterViewModel model);
+        Task<SignInResult> Login(UserLoginViewModel model);
         Task<IdentityResult> EditAccount(UserEditViewModel model);
         Task<UserEditViewModel> EditAccount(Guid id);
         Task RemoveAccount(Guid id);
