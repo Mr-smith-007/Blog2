@@ -5,6 +5,7 @@ using AutoMapper;
 using Blog2.BLL;
 using Blog2.DAL.Repositories.IRepositories;
 using Blog2.DAL.Repositories;
+using NLog.Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +36,11 @@ builder.Services
                 .AddTransient<ITagRepository, TagRepository>()
                 .AddTransient<IPostRepository, PostRepository>();
 
-
+builder.Logging
+                .ClearProviders()
+                .SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace)
+                .AddConsole()
+                .AddNLog("nlog");
 
 var app = builder.Build();
 
