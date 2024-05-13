@@ -6,6 +6,8 @@ using Blog2.BLL;
 using Blog2.DAL.Repositories.IRepositories;
 using Blog2.DAL.Repositories;
 using NLog.Web;
+using Blog2.BLL.Services.IServices;
+using Blog2.BLL.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +20,7 @@ var mapperConfig = new MapperConfiguration((v) =>{
 
 IMapper mapper = mapperConfig.CreateMapper();
 
-string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Blog2DbContext>(options => options.UseSqlServer(connection))
     .AddIdentity<User, Role>(opts =>
     {
@@ -34,7 +36,13 @@ builder.Services
                 .AddSingleton(mapper)
                 .AddTransient<ICommentRepository, CommentRepository>()
                 .AddTransient<ITagRepository, TagRepository>()
-                .AddTransient<IPostRepository, PostRepository>();
+                .AddTransient<IPostRepository, PostRepository>()
+                .AddTransient<IAccountService, AccountService>()
+                .AddTransient<ICommentService, CommentService>()
+                .AddTransient<IHomeService, HomeService>()
+                .AddTransient<IPostService, PostService>()
+                .AddTransient<ITagService, TagService>()
+                .AddTransient<IRoleService, RoleService>();
 
 builder.Logging
                 .ClearProviders()
