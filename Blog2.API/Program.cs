@@ -1,5 +1,7 @@
 using AutoMapper;
 using Blog2.API.Contracts;
+using Blog2.API.Contracts.Services;
+using Blog2.API.Contracts.Services.IServises;
 using Blog2.API.Data.Models;
 using Blog2.API.Data.Models.Response;
 using Blog2.API.Data.Repositories;
@@ -45,7 +47,12 @@ builder.Services
     .AddSingleton(mapper)
     .AddTransient<ICommentRepository, CommentRepository>()
     .AddTransient<ITagRepository, TagRepository>()
-    .AddTransient<IPostRepository, PostRepository>();
+    .AddTransient<IPostRepository, PostRepository>()
+    .AddTransient<IAccountService, AccountService>()
+    .AddTransient<ICommentService, CommentService>()
+    .AddTransient<IPostService, PostService>()
+    .AddTransient<ITagService, TagService>()
+    .AddTransient<IRoleService, RoleService>();
 
 builder.Services.AddAuthentication(optionts => optionts.DefaultScheme = "Cookies")
                .AddCookie("Cookies", options =>
