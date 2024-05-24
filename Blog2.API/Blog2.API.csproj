@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="Contracts\Services\IServises\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
