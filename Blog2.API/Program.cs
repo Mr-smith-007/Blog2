@@ -1,5 +1,9 @@
+using AutoMapper;
+using Blog2.API.Contracts;
 using Blog2.API.Data.Models;
 using Blog2.API.Data.Models.Response;
+using Blog2.API.Data.Repositories;
+using Blog2.API.Data.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +19,14 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(filepath);
 });
 
+// Connect AutoMapper
+var mapperConfig = new MapperConfiguration((v) =>
+{
+    v.AddProfile(new MappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+
 // Connect DataBase
 string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(connection))
@@ -29,16 +41,11 @@ builder.Services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(con
     .AddEntityFrameworkStores<BlogDbContext>();
 
 // Services AddSingletons/Transient
-//builder.Services
-//    .AddSingleton(mapper)
-//    .AddTransient<ICommentRepository, CommentRepository>()
-//    .AddTransient<ITagRepository, TagRepository>()
-//    .AddTransient<IPostRepository, PostRepository>()
-//    .AddTransient<IAccountService, AccountService>()
-//    .AddTransient<ICommentService, CommentService>()
-//    .AddTransient<IPostService, PostService>()
-//    .AddTransient<ITagService, TagService>()
-//    .AddTransient<IRoleService, RoleService>();
+builder.Services
+    .AddSingleton(mapper)
+    .AddTransient<ICommentRepository, CommentRepository>()
+    .AddTransient<ITagRepository, TagRepository>()
+    .AddTransient<IPostRepository, PostRepository>();
 
 builder.Services.AddAuthentication(optionts => optionts.DefaultScheme = "Cookies")
                .AddCookie("Cookies", options =>
